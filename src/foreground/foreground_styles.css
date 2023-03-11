@@ -1,0 +1,21 @@
+.ce_main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: absolute;
+    z-index: 999999;
+    top: 0;
+    left: 0;
+    color: white;
+    background-color: red;
+}
+
+#ce_input {
+    width: 50px;
+}
+
+#ce_button {
+    background-color: black;
+    cursor: pointer;
+}
