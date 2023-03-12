@@ -38,3 +38,18 @@ ce_button.addEventListener('click', () => {
         }
     });
 });
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    switch (request.message) {
+        case 'get_current_data_from_local_store':
+            chrome.storage.local.get('name', data => {
+                if (chrome.runtime.lastError) return sendResponse({ message: 'fail' })
+
+                sendResponse({ message: 'success', payload: data.name });
+            });
+
+            return true;
+        default:
+            return true;
+    }
+});

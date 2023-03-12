@@ -1,6 +1,10 @@
 const loginInput = document.querySelector('#login-input')
 const passwordInput = document.querySelector('#password-input')
 
+const saveCurrentDataButton = document.querySelector('#save-current-data')
+const enableCurrentDataButton = document.querySelector('#enable-current-data')
+const disableCurrentDataButton = document.querySelector('#disable-current-data')
+
 //  runs secondly every time when an extension popup is opened
 console.log('popup js open (from background_script)')
 
@@ -30,4 +34,8 @@ loginInput.addEventListener('change', function (event) {
 
 passwordInput.addEventListener('change', function (event) {
   writeNewInputToLocalStore({ key: 'password', value: event.target.value })
+});
+
+saveCurrentDataButton.addEventListener('click', function (event) {
+  chrome.runtime.sendMessage({ message: 'get_current_data_from_local_store', payload })
 });
