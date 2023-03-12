@@ -39,14 +39,12 @@ ce_button.addEventListener('click', () => {
     });
 });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request) => {
     switch (request.message) {
         case 'get_current_data_from_local_store':
-            chrome.storage.local.get('name', data => {
-                if (chrome.runtime.lastError) return sendResponse({ message: 'fail' })
+            const href = window.location.href
 
-                sendResponse({ message: 'success', payload: data.name });
-            });
+            console.log('href', href)
 
             return true;
         default:

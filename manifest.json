@@ -29,6 +29,6 @@
         "scripting"
     ],
     "host_permissions": [
-        "https://www.google.com/*"
+        "http://localhost:3003/*"
     ]
 }

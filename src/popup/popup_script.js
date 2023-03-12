@@ -36,6 +36,6 @@ passwordInput.addEventListener('change', function (event) {
   writeNewInputToLocalStore({ key: 'password', value: event.target.value })
 });
 
-saveCurrentDataButton.addEventListener('click', function (event) {
-  chrome.runtime.sendMessage({ message: 'get_current_data_from_local_store', payload })
+saveCurrentDataButton.addEventListener('click', function () {
+  chrome.runtime.sendMessage({ message: 'get_current_data_from_local_store'})
 });

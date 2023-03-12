@@ -1,6 +1,6 @@
 const LOCAL_STORAGE_KEY = 'autoLoginExtension'
 
-// runs first of all every time when an extension popup is opened
+// fired first every time an extension popup is opened
 console.log('from background script')
 
 const saveDataToStore = (data) => chrome.storage.local.set({ [LOCAL_STORAGE_KEY]: JSON.stringify(data) })
@@ -10,17 +10,21 @@ chrome.runtime.onInstalled.addListener(() => {
   saveDataToStore({ login: "aaa", password: "bbb" })
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
-        chrome.scripting.insertCSS({ target: { tabId: tabId }, files: ["./src/foreground/foreground_styles.css"] })
-          .then(() => {
-              console.log("INJECTED THE FOREGROUND STYLES.");
+let tabId
 
-              chrome.scripting.executeScript({ target: { tabId: tabId }, files: ["./src/foreground/foreground.js"] })
-                .then(() => console.log("INJECTED THE FOREGROUND SCRIPT."));
-          })
-          .catch(err => console.log(err));
-    }
+chrome.tabs.onUpdated.addListener((currentTabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
+    tabId = currentTabId
+
+    chrome.scripting.insertCSS({ target: { tabId: currentTabId }, files: ["./src/foreground/foreground_styles.css"] })
+      .then(() => {
+        console.log("INJECTED THE FOREGROUND STYLES.");
+
+        chrome.scripting.executeScript({ target: { tabId: currentTabId }, files: ["./src/foreground/foreground.js"] })
+          .then(() => console.log("INJECTED THE FOREGROUND SCRIPT."));
+      })
+      .catch(err => console.log(err));
+  }
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -61,6 +65,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         saveDataToStore(savedData)
       });
+      return true;
+    case 'get_current_data_from_local_store':
+      chrome.tabs.sendMessage(tabId, { message: 'get_current_data_from_local_store' })
+
       return true;
     default:
       return true;
